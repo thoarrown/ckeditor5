@@ -147,6 +147,21 @@ export default class HtmlEmbedEditing extends Plugin {
 					domContentWrapper = domElement;
 
 					renderContent( { domElement, editor, state, props } );
+
+					// Since there is a `data-cke-ignore-events` attribute set on the wrapper element in the editable mode,
+					// the explicit `mousedown` handler on the `capture` phase is needed to move the selection onto the whole
+					// HTML embed widget.
+					domContentWrapper.addEventListener( 'mousedown', () => {
+						if ( state.isEditable ) {
+							const model = editor.model;
+							const selectedElement = model.document.selection.getSelectedElement();
+
+							// Move the selection onto the whole HTML embed widget if it's currently not selected.
+							if ( selectedElement !== modelElement ) {
+								model.change( writer => writer.setSelection( modelElement, 'on' ) );
+							}
+						}
+					}, true );
 				} );
 
 				// API exposed on each raw HTML embed widget so other features can control a particular widget.
@@ -170,8 +185,7 @@ export default class HtmlEmbedEditing extends Plugin {
 						// it's enough to update the model – the entire widget will be reconverted.
 						if ( newValue !== state.getRawHtmlValue() ) {
 							editor.execute( 'updateHtmlEmbed', newValue );
-						} else {
-							this.cancel();
+							editor.editing.view.focus();
 						}
 					},
 					cancel() {
@@ -180,6 +194,7 @@ export default class HtmlEmbedEditing extends Plugin {
 						} );
 
 						renderContent( { domElement: domContentWrapper, editor, state, props } );
+						editor.editing.view.focus();
 
 						view.change( writer => {
 							writer.removeAttribute( 'data-cke-ignore-events', viewContentWrapper );
@@ -266,9 +281,9 @@ export default class HtmlEmbedEditing extends Plugin {
 				class: 'raw-html-embed__buttons-wrapper'
 			} );
 			// TODO these should be cached and we should only clone here these cached nodes!
-			const domEditButton = createDomButton( editor.locale, 'edit' );
-			const domSaveButton = createDomButton( editor.locale, 'save' );
-			const domCancelButton = createDomButton( editor.locale, 'cancel' );
+			const domEditButton = createDomButton( editor, 'edit' );
+			const domSaveButton = createDomButton( editor, 'save' );
+			const domCancelButton = createDomButton( editor, 'cancel' );
 
 			if ( state.isEditable ) {
 				const clonedDomSaveButton = domSaveButton.cloneNode( true );
@@ -335,9 +350,10 @@ export default class HtmlEmbedEditing extends Plugin {
 //  @param {module:utils/locale~Locale} locale Editor locale.
 //  @param {'edit'|'save'|'cancel'} type Type of button to create.
 //  @returns {HTMLElement}
-function createDomButton( locale, type ) {
-	const t = locale.t;
-	const buttonView = new ButtonView( locale );
+function createDomButton( editor, type ) {
+	const t = editor.locale.t;
+	const buttonView = new ButtonView( editor.locale );
+	const command = editor.commands.get( 'updateHtmlEmbed' );
 
 	buttonView.set( {
 		tooltipPosition: 'sw',
@@ -360,6 +376,7 @@ function createDomButton( locale, type ) {
 			withText: true,
 			class: 'raw-html-embed__save-button'
 		} );
+		buttonView.bind( 'isEnabled' ).to( command, 'isEnabled' );
 	} else {
 		buttonView.set( {
 			icon: cancelIcon,
