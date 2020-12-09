@@ -7,42 +7,67 @@
 	--ck-html-embed-content-width: calc(100% - 1.5 * var(--ck-icon-size));
 	--ck-html-embed-source-height: 10em;
 	--ck-html-embed-unfocused-outline-width: 1px;
-	--ck-html-embed-content-min-height: calc(var(--ck-icon-size) + var(--ck-spacing-standard));
+	--ck-html-embed-content-min-height: calc(
+		var(--ck-icon-size) + var(--ck-spacing-standard)
+	);
 }
 
 /* The feature container. */
 .ck-widget.raw-html-embed {
 	font-size: var(--ck-font-size-base);
 	background-color: var(--ck-color-base-foreground);
-	border: 1px solid #E5E5E5;
+	border: 1px solid #e5e5e5;
 	outline: none !important;
 
-	& .raw-html-embed__hidden {
+	&.raw-html-embed__hidden {
 		display: none;
 	}
 
-	/* &:not(.ck-widget_selected):not(:hover) { */
-		/* outline: var(--ck-html-embed-unfocused-outline-width) dashed var(--ck-color-widget-blurred-border); */
-		/* border: 1px solid #E5E5E5; */
-	/* } */
-
-	& .ck-widget__type-around .ck-widget__type-around__button.ck-widget__type-around__button_before {
+	&
+		.ck-widget__type-around
+		.ck-widget__type-around__button.ck-widget__type-around__button_before {
 		margin-left: 50px;
 	}
 
-	/* ----- Emebed label in the upper left corner ----------------------------------------------- */
+	/* HTML embed widget itself should respect UI language direction */
+	&[dir='ltr'] {
+		text-align: left;
+	}
+
+	&[dir='rtl'] {
+		text-align: right;
+	}
+
+	/* ----- Embed label in the upper left corner ----------------------------------------------- */
 
 	&::before {
 		content: attr(data-html-embed-label);
 		top: calc(-1 * var(--ck-html-embed-unfocused-outline-width));
 		left: var(--ck-spacing-standard);
 		background: hsl(0deg 0% 60%);
-		transition: background var(--ck-widget-handler-animation-duration) var(--ck-widget-handler-animation-curve);
-		padding: calc(var(--ck-spacing-tiny) + var(--ck-html-embed-unfocused-outline-width)) var(--ck-spacing-small) var(--ck-spacing-tiny);
+		transition: background var(--ck-widget-handler-animation-duration)
+			var(--ck-widget-handler-animation-curve);
+		padding: calc(
+				var(--ck-spacing-tiny) +
+					var(--ck-html-embed-unfocused-outline-width)
+			)
+			var(--ck-spacing-small) var(--ck-spacing-tiny);
 		border-radius: 0 0 var(--ck-border-radius) var(--ck-border-radius);
 		color: var(--ck-color-base-background);
 		font-size: var(--ck-font-size-tiny);
 		font-family: var(--ck-font-face);
+	}
+
+	&[dir='rtl']::before {
+		left: auto;
+		right: var(--ck-spacing-standard);
+	}
+
+	/* Make space for label but it only collides in LTR languages */
+	&[dir='ltr']
+		.ck-widget__type-around
+		.ck-widget__type-around__button.ck-widget__type-around__button_before {
+		margin-left: 50px;
 	}
 
 	@nest .ck.ck-editor__editable.ck-blurred &.ck-widget_selected::before {
@@ -50,7 +75,8 @@
 		padding: var(--ck-spacing-tiny) var(--ck-spacing-small);
 	}
 
-	@nest .ck.ck-editor__editable:not(.ck-blurred) &.ck-widget_selected::before {
+	@nest .ck.ck-editor__editable:not(.ck-blurred)
+			&.ck-widget_selected::before {
 		top: 0;
 		padding: var(--ck-spacing-tiny) var(--ck-spacing-small);
 		background: var(--ck-color-focus-border);
@@ -84,6 +110,7 @@
 			padding: 10px 20px;
 			font-size: 16px;
 			margin-right: 15px;
+
 			& svg {
 				width: 15px;
 				height: 15px;
@@ -94,10 +121,11 @@
 		& .ck-button.raw-html-embed__cancel-button {
 			/* color: var(--ck-color-button-cancel); */
 			color: #818181;
-			background-color: #E5E5E5;
+			background-color: #e5e5e5;
 			padding: 10px 20px;
 			font-size: 16px;
 			margin-right: 15px;
+
 			& svg {
 				width: 15px;
 				height: 15px;
@@ -108,6 +136,11 @@
 		/* & .ck-button:not(:first-child) {
 			margin-top: var(--ck-spacing-small);
 		} */
+	}
+
+	&[dir='rtl'] .raw-html-embed__buttons-wrapper {
+		left: var(--ck-spacing-standard);
+		right: auto;
 	}
 
 	/* The edit source element. */
@@ -123,16 +156,23 @@
 		font-family: monospace;
 		tab-size: 4;
 		white-space: pre-wrap;
-		font-size: var(--ck-font-size-base); /* Safari needs this. */
+		font-size: var(--ck-font-size-base);
+		/* Safari needs this. */
 		box-shadow: none;
-		border-bottom: 1px solid #E5E5E5;
+		border-bottom: 1px solid #e5e5e5;
 		border-top: 0;
 		border-left: 0;
 		border-right: 0;
+
 		&:focus {
 			box-shadow: none;
 			outline: none;
 		}
+
+		/* HTML code is direction–agnostic. */
+		text-align: left;
+		direction: ltr;
+
 		&[disabled] {
 			background: hsl(0deg 0% 97%);
 			color: hsl(0deg 0% 56%);
@@ -158,4 +198,3 @@
 		}
 	}
 }
-

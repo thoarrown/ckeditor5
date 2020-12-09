@@ -225,6 +225,28 @@ describe( 'HtmlEmbedEditing', () => {
 					'</div>'
 				);
 			} );
+
+			it( 'should convert innerHTML (and preserve comments and raw data formatting) of div.raw-html-embed', () => {
+				const rawContent = [
+					'	<!-- foo -->',
+					'	<p>',
+					'		<b>Foo B.</b>',
+					'		<!-- abc -->',
+					'		<i>Foo I.</i>',
+					'	</p>',
+					'	<!-- bar -->'
+				].join( '\n' );
+
+				editor.setData(
+					'<div class="raw-html-embed">' +
+						rawContent +
+					'</div>'
+				);
+
+				const rawHtml = model.document.getRoot().getChild( 0 );
+
+				expect( rawHtml.getAttribute( 'value' ) ).to.equal( rawContent );
+			} );
 		} );
 	} );
 
@@ -368,6 +390,27 @@ describe( 'HtmlEmbedEditing', () => {
 				expect( domContentWrapper.querySelectorAll( '.raw-html-embed__edit-button' ) ).to.have.lengthOf( 1 );
 			} );
 
+			it( 'switches to "preview mode" after clicking save button when there are no changes', () => {
+				setModelData( model, '<rawHtml value="foo"></rawHtml>' );
+
+				let widget = viewDocument.getRoot().getChild( 0 );
+				let contentWrapper = widget.getChild( 1 );
+				let domContentWrapper = editor.editing.view.domConverter.mapViewToDom( contentWrapper );
+
+				widget.getCustomProperty( 'rawHtmlApi' ).makeEditable();
+
+				domContentWrapper.querySelector( '.raw-html-embed__save-button' ).click();
+
+				// The entire DOM has rendered once again. The references were invalid.
+				widget = viewDocument.getRoot().getChild( 0 );
+				contentWrapper = widget.getChild( 1 );
+				domContentWrapper = editor.editing.view.domConverter.mapViewToDom( contentWrapper );
+
+				// There's exactly this button, and nothing else.
+				expect( domContentWrapper.querySelectorAll( 'button' ) ).to.have.lengthOf( 1 );
+				expect( domContentWrapper.querySelectorAll( '.raw-html-embed__edit-button' ) ).to.have.lengthOf( 1 );
+			} );
+
 			it( 'does not lose editor focus after saving changes', () => {
 				setModelData( model, '<rawHtml value="foo"></rawHtml>' );
 				const widget = viewDocument.getRoot().getChild( 0 );
@@ -490,6 +533,26 @@ describe( 'HtmlEmbedEditing', () => {
 				domContentWrapperBar.querySelector( 'textarea' ).dispatchEvent( new Event( 'mousedown' ) );
 
 				expect( getModelData( model ) ).to.equal( '<rawHtml value="foo"></rawHtml>[<rawHtml value="bar"></rawHtml>]' );
+			} );
+
+			describe( 'different setting of ui language', () => {
+				it( 'the widget should have the dir attribute for LTR language', () => {
+					sinon.stub( editor.locale, 'uiLanguageDirection' ).value( 'ltr' );
+
+					setModelData( model, '<rawHtml></rawHtml>' );
+					const widget = viewDocument.getRoot().getChild( 0 );
+
+					expect( widget.getAttribute( 'dir' ) ).to.equal( 'ltr' );
+				} );
+
+				it( 'the widget should have the dir attribute for RTL language', () => {
+					sinon.stub( editor.locale, 'uiLanguageDirection' ).value( 'rtl' );
+
+					setModelData( model, '<rawHtml></rawHtml>' );
+					const widget = viewDocument.getRoot().getChild( 0 );
+
+					expect( widget.getAttribute( 'dir' ) ).to.equal( 'rtl' );
+				} );
 			} );
 
 			describe( 'rawHtmlApi.makeEditable()', () => {
@@ -623,6 +686,63 @@ describe( 'HtmlEmbedEditing', () => {
 				const domContentWrapper = editor.editing.view.domConverter.mapViewToDom( contentWrapper );
 
 				expect( domContentWrapper.querySelector( 'div.raw-html-embed__preview' ).innerHTML ).to.equal( 'bar' );
+			} );
+
+			describe( 'different setting of ui and content language', () => {
+				it( 'the widget and preview should have the dir attribute for LTR language', () => {
+					sinon.stub( editor.locale, 'uiLanguageDirection' ).value( 'ltr' );
+					sinon.stub( editor.locale, 'contentLanguageDirection' ).value( 'ltr' );
+
+					setModelData( model, '<rawHtml></rawHtml>' );
+					const widget = viewDocument.getRoot().getChild( 0 );
+					const domPreview = getDomPreview( widget );
+
+					expect( widget.getAttribute( 'dir' ) ).to.equal( 'ltr' );
+					expect( domPreview.getAttribute( 'dir' ) ).to.equal( 'ltr' );
+				} );
+
+				it( 'the widget and preview should have the dir attribute for RTL language', () => {
+					sinon.stub( editor.locale, 'uiLanguageDirection' ).value( 'rtl' );
+					sinon.stub( editor.locale, 'contentLanguageDirection' ).value( 'rtl' );
+
+					setModelData( model, '<rawHtml></rawHtml>' );
+					const widget = viewDocument.getRoot().getChild( 0 );
+					const domPreview = getDomPreview( widget );
+
+					expect( widget.getAttribute( 'dir' ) ).to.equal( 'rtl' );
+					expect( domPreview.getAttribute( 'dir' ) ).to.equal( 'rtl' );
+				} );
+
+				it( 'the widget should have the dir attribute for LTR language, but preview for RTL', () => {
+					sinon.stub( editor.locale, 'uiLanguageDirection' ).value( 'ltr' );
+					sinon.stub( editor.locale, 'contentLanguageDirection' ).value( 'rtl' );
+
+					setModelData( model, '<rawHtml></rawHtml>' );
+					const widget = viewDocument.getRoot().getChild( 0 );
+					const domPreview = getDomPreview( widget );
+
+					expect( widget.getAttribute( 'dir' ) ).to.equal( 'ltr' );
+					expect( domPreview.getAttribute( 'dir' ) ).to.equal( 'rtl' );
+				} );
+
+				it( 'the widget should have the dir attribute for RTL language, butPreview for LTR', () => {
+					sinon.stub( editor.locale, 'uiLanguageDirection' ).value( 'rtl' );
+					sinon.stub( editor.locale, 'contentLanguageDirection' ).value( 'ltr' );
+
+					setModelData( model, '<rawHtml></rawHtml>' );
+					const widget = viewDocument.getRoot().getChild( 0 );
+					const domPreview = getDomPreview( widget );
+
+					expect( widget.getAttribute( 'dir' ) ).to.equal( 'rtl' );
+					expect( domPreview.getAttribute( 'dir' ) ).to.equal( 'ltr' );
+				} );
+
+				function getDomPreview( widget ) {
+					const contentWrapper = widget.getChild( 1 );
+					const domContentWrapper = editor.editing.view.domConverter.mapViewToDom( contentWrapper );
+
+					return domContentWrapper.querySelector( 'div.raw-html-embed__preview' );
+				}
 			} );
 		} );
 	} );
