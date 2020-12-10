@@ -19,12 +19,7 @@
 	border: 1px solid #e5e5e5;
 	outline: none !important;
 
-	&.raw-html-embed__hidden {
-		display: none;
-	}
-
-	&
-		.ck-widget__type-around
+	&.ck-widget__type-around
 		.ck-widget__type-around__button.ck-widget__type-around__button_before {
 		margin-left: 50px;
 	}
@@ -88,6 +83,9 @@
 	}
 
 	/* ----- Emebed internals --------------------------------------------------------------------- */
+	& .raw-html-embed__hidden {
+		display: none !important;
+	}
 
 	& .raw-html-embed__content-wrapper {
 		/* padding: var(--ck-spacing-standard); */

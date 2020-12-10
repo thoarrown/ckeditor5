@@ -5,27 +5,31 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _ballooneditor = _interopRequireDefault(require("@ckeditor/ckeditor5-editor-balloon/src/ballooneditor"));
+require("../theme/theme.css");
 
-var _essentials = _interopRequireDefault(require("@ckeditor/ckeditor5-essentials/src/essentials"));
-
-var _uploadadapter = _interopRequireDefault(require("@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter"));
+var _alignment = _interopRequireDefault(require("@ckeditor/ckeditor5-alignment/src/alignment"));
 
 var _autoformat = _interopRequireDefault(require("@ckeditor/ckeditor5-autoformat/src/autoformat"));
+
+var _autosave = _interopRequireDefault(require("@ckeditor/ckeditor5-autosave/src/autosave"));
+
+var _ballooneditor = _interopRequireDefault(require("@ckeditor/ckeditor5-editor-balloon/src/ballooneditor"));
+
+var _blockquote = _interopRequireDefault(require("@ckeditor/ckeditor5-block-quote/src/blockquote"));
 
 var _blocktoolbar = _interopRequireDefault(require("@ckeditor/ckeditor5-ui/src/toolbar/block/blocktoolbar"));
 
 var _bold = _interopRequireDefault(require("@ckeditor/ckeditor5-basic-styles/src/bold"));
 
-var _italic = _interopRequireDefault(require("@ckeditor/ckeditor5-basic-styles/src/italic"));
-
-var _blockquote = _interopRequireDefault(require("@ckeditor/ckeditor5-block-quote/src/blockquote"));
-
 var _ckfinder = _interopRequireDefault(require("@ckeditor/ckeditor5-ckfinder/src/ckfinder"));
 
 var _easyimage = _interopRequireDefault(require("@ckeditor/ckeditor5-easy-image/src/easyimage"));
 
+var _essentials = _interopRequireDefault(require("@ckeditor/ckeditor5-essentials/src/essentials"));
+
 var _heading = _interopRequireDefault(require("@ckeditor/ckeditor5-heading/src/heading"));
+
+var _htmlembed = _interopRequireDefault(require("@ckeditor/ckeditor5-html-embed/src/htmlembed"));
 
 var _image = _interopRequireDefault(require("@ckeditor/ckeditor5-image/src/image"));
 
@@ -39,31 +43,19 @@ var _imageupload = _interopRequireDefault(require("@ckeditor/ckeditor5-image/src
 
 var _indent = _interopRequireDefault(require("@ckeditor/ckeditor5-indent/src/indent"));
 
+var _italic = _interopRequireDefault(require("@ckeditor/ckeditor5-basic-styles/src/italic"));
+
 var _link = _interopRequireDefault(require("@ckeditor/ckeditor5-link/src/link"));
 
 var _list = _interopRequireDefault(require("@ckeditor/ckeditor5-list/src/list"));
 
 var _mediaembed = _interopRequireDefault(require("@ckeditor/ckeditor5-media-embed/src/mediaembed"));
 
+var _mention = _interopRequireDefault(require("@ckeditor/ckeditor5-mention/src/mention"));
+
 var _paragraph = _interopRequireDefault(require("@ckeditor/ckeditor5-paragraph/src/paragraph"));
 
 var _pastefromoffice = _interopRequireDefault(require("@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice"));
-
-var _table = _interopRequireDefault(require("@ckeditor/ckeditor5-table/src/table"));
-
-var _tabletoolbar = _interopRequireDefault(require("@ckeditor/ckeditor5-table/src/tabletoolbar"));
-
-var _texttransformation = _interopRequireDefault(require("@ckeditor/ckeditor5-typing/src/texttransformation"));
-
-var _underline = _interopRequireDefault(require("@ckeditor/ckeditor5-basic-styles/src/underline"));
-
-var _wordcount = _interopRequireDefault(require("@ckeditor/ckeditor5-word-count/src/wordcount"));
-
-var _autosave = _interopRequireDefault(require("@ckeditor/ckeditor5-autosave/src/autosave"));
-
-var _title = _interopRequireDefault(require("@ckeditor/ckeditor5-heading/src/title"));
-
-var _alignment = _interopRequireDefault(require("@ckeditor/ckeditor5-alignment/src/alignment"));
 
 var _specialcharacters = _interopRequireDefault(require("@ckeditor/ckeditor5-special-characters/src/specialcharacters"));
 
@@ -77,13 +69,23 @@ var _specialcharacterslatin = _interopRequireDefault(require("@ckeditor/ckeditor
 
 var _specialcharacterstext = _interopRequireDefault(require("@ckeditor/ckeditor5-special-characters/src/specialcharacterstext.js"));
 
-var _tableproperties = _interopRequireDefault(require("@ckeditor/ckeditor5-table/src/tableproperties"));
+var _table = _interopRequireDefault(require("@ckeditor/ckeditor5-table/src/table"));
 
 var _tablecellproperties = _interopRequireDefault(require("@ckeditor/ckeditor5-table/src/tablecellproperties"));
 
-var _htmlembed = _interopRequireDefault(require("@ckeditor/ckeditor5-html-embed/src/htmlembed"));
+var _tableproperties = _interopRequireDefault(require("@ckeditor/ckeditor5-table/src/tableproperties"));
 
-require("../theme/theme.css");
+var _tabletoolbar = _interopRequireDefault(require("@ckeditor/ckeditor5-table/src/tabletoolbar"));
+
+var _texttransformation = _interopRequireDefault(require("@ckeditor/ckeditor5-typing/src/texttransformation"));
+
+var _title = _interopRequireDefault(require("@ckeditor/ckeditor5-heading/src/title"));
+
+var _underline = _interopRequireDefault(require("@ckeditor/ckeditor5-basic-styles/src/underline"));
+
+var _uploadadapter = _interopRequireDefault(require("@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter"));
+
+var _wordcount = _interopRequireDefault(require("@ckeditor/ckeditor5-word-count/src/wordcount"));
 
 var _sanitizeHtml = _interopRequireDefault(require("sanitize-html"));
 
@@ -119,10 +121,10 @@ function (_BalloonEditorBase) {
 
 
 exports["default"] = BalloonEditor;
-BalloonEditor.builtinPlugins = [_essentials["default"], _uploadadapter["default"], _autoformat["default"], _blocktoolbar["default"], _bold["default"], _italic["default"], _blockquote["default"], _ckfinder["default"], _easyimage["default"], _heading["default"], _image["default"], _imagecaption["default"], _imagestyle["default"], _imagetoolbar["default"], _imageupload["default"], _indent["default"], _link["default"], _list["default"], _mediaembed["default"], _paragraph["default"], _pastefromoffice["default"], _table["default"], _tabletoolbar["default"], _underline["default"], _wordcount["default"], _autosave["default"], _title["default"], _alignment["default"], _texttransformation["default"], _specialcharacters["default"], _specialcharactersarrows["default"], _specialcharacterscurrency["default"], _specialcharactersessentials["default"], _specialcharacterslatin["default"], _specialcharacterstext["default"], _tableproperties["default"], _tablecellproperties["default"], _htmlembed["default"]]; // Editor configuration.
+BalloonEditor.builtinPlugins = [_essentials["default"], _uploadadapter["default"], _autoformat["default"], _blocktoolbar["default"], _bold["default"], _italic["default"], _blockquote["default"], _ckfinder["default"], _easyimage["default"], _heading["default"], _image["default"], _imagecaption["default"], _imagestyle["default"], _imagetoolbar["default"], _imageupload["default"], _indent["default"], _link["default"], _list["default"], _mediaembed["default"], _paragraph["default"], _pastefromoffice["default"], _table["default"], _tabletoolbar["default"], _underline["default"], _wordcount["default"], _autosave["default"], _title["default"], _alignment["default"], _texttransformation["default"], _specialcharacters["default"], _specialcharactersarrows["default"], _specialcharacterscurrency["default"], _specialcharactersessentials["default"], _specialcharacterslatin["default"], _specialcharacterstext["default"], _tableproperties["default"], _tablecellproperties["default"], _htmlembed["default"], _mention["default"]]; // Editor configuration.
 
 BalloonEditor.defaultConfig = {
-  blockToolbar: ['heading', '|', 'bulletedList', 'numberedList', '|', 'indent', 'outdent', '|', 'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', '|', 'specialCharacters', 'htmlEmbed'],
+  blockToolbar: ['heading', '|', 'bulletedList', 'numberedList', '|', 'indent', 'outdent', '|', 'imageUpload', 'blockQuote', 'mediaEmbed', '|', 'specialCharacters', 'htmlEmbed'],
   toolbar: {
     items: ['bold', 'italic', 'underline', 'link', 'alignment']
   },
@@ -147,9 +149,6 @@ BalloonEditor.defaultConfig = {
       }
     }]
   },
-  table: {
-    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableCellProperties', 'tableProperties']
-  },
   ckfinder: {
     // Open the file manager in the pop-up window.
     openerMethod: 'popup'
@@ -165,6 +164,13 @@ BalloonEditor.defaultConfig = {
 
       };
     }
+  },
+  mention: {
+    feeds: [{
+      marker: '@',
+      feed: ['@Barney', '@Lily', '@Marshall', '@Robin', '@Ted'],
+      minimumCharacters: 1
+    }]
   },
   // This value must be kept in sync with the language defined in webpack.config.js.
   autosave: {
